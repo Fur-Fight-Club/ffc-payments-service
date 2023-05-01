@@ -1,1 +1,1 @@
-# ffc-payments-service
+# ffc-notifications-service
