@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Invoice, Transaction } from "ffc-prisma-package/dist/client";
 import { createZodDto } from "nestjs-zod";
 import { z } from "nestjs-zod/z";
 
@@ -49,4 +50,10 @@ export class BuyCreditDto extends createZodDto(CreditsDto) {
 
   @ApiProperty()
   user: number;
+}
+
+export interface BuyCreditReturn {
+  transaction: Transaction;
+  invoice: Invoice;
+  payment_url: string;
 }
