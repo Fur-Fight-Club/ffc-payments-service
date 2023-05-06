@@ -13,7 +13,9 @@ export class StripeService {
   async createCheckoutSession(
     price: number,
     productName: string,
-    productDescription: string
+    productDescription: string,
+    successUrl: string = `${process.env.FRONTEND_URL}/payments/success`,
+    cancelUrl: string = `${process.env.FRONTEND_URL}/payments/error`
   ) {
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -31,8 +33,8 @@ export class StripeService {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL}/payments/success`,
-      cancel_url: `${process.env.FRONTEND_URL}/payments/error`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
     });
 
     return session;
