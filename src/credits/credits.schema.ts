@@ -12,6 +12,10 @@ export enum CreditsPacks {
   PACK_6 = "11000",
 }
 
+export const exchangeRate = 100 / 10000;
+
+export const exchangeFees = 0.15;
+
 export const MoneyToCredits = {
   5: CreditsPacks.PACK_1,
   10: CreditsPacks.PACK_2,
