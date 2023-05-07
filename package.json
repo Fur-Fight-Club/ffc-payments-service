@@ -27,12 +27,16 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "^4.13.0",
+    "aws-sdk": "^2.1373.0",
     "bcrypt": "^5.1.0",
-    "ffc-prisma-package": "^1.4.3",
+    "ffc-prisma-package": "^2.6.0",
     "fs": "^0.0.1-security",
+    "nestjs-zod": "^2.3.2",
     "node-fetch": "^2.6.9",
+    "pdfmake": "^0.2.7",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
+    "stripe": "^12.4.0",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
