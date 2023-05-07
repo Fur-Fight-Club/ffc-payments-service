@@ -89,7 +89,7 @@ export class CreditsService {
     await this.prisma.stripePayments.create({
       data: {
         fk_transaction: transaction.id,
-        session_id: session.id,
+        session_id: session_uuid,
         session: JSON.stringify(session),
         status: StripePaymentStatus.PENDING,
       },
