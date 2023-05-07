@@ -12,7 +12,7 @@ export enum CreditsPacks {
   PACK_6 = "11000",
 }
 
-export const exchangeRate = 100 / 10000;
+export const exchangeRate = 100 / 11500;
 
 export const exchangeFees = 0.15;
 
