@@ -81,10 +81,12 @@ export class CreditsService {
     const session = await this.stripeService.createCheckoutSession(
       amount,
       `${credits} credits`,
-      `Acheter ${credits} credits pour ${amount / 100}€`
+      `Acheter ${credits} credits pour ${amount / 100}€`,
+      `${process.env.FRONTEND_URL}/payments/success?session_id=${session_uuid}`,
+      `${process.env.FRONTEND_URL}/payments/error?session_id=${session_uuid}`
     );
 
-    const stripePayment = await this.prisma.stripePayments.create({
+    await this.prisma.stripePayments.create({
       data: {
         fk_transaction: transaction.id,
         session_id: session.id,
