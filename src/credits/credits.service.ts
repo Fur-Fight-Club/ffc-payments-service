@@ -82,8 +82,8 @@ export class CreditsService {
       amount,
       `${credits} credits`,
       `Acheter ${credits} credits pour ${amount / 100}€`,
-      `${process.env.FRONTEND_URL}/payments/success?session_id=${session_uuid}`,
-      `${process.env.FRONTEND_URL}/payments/error?session_id=${session_uuid}`
+      `${process.env.FRONTEND_URL}/payments/success/${session_uuid}`,
+      `${process.env.FRONTEND_URL}/payments/error/${session_uuid}`
     );
 
     await this.prisma.stripePayments.create({
