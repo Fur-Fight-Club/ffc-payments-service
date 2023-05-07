@@ -6,7 +6,7 @@ import {
 import { exchangeRate, exchangeFees } from "src/credits/credits.schema";
 import { InvoicesService } from "src/services/invoices.service";
 import { PrismaService } from "src/services/prisma.service";
-import { generateUUID } from "src/utils/functions.utils";
+import { addDotEveryThreeChars, generateUUID } from "src/utils/functions.utils";
 
 @Injectable()
 export class WalletService {
@@ -64,7 +64,7 @@ export class WalletService {
     const invoiceBuffer = await this.invoices.generatePDFInvoice(
       [
         {
-          name: `Retrait de ${amount} crédits`,
+          name: `Retrait de ${addDotEveryThreeChars(`${amount}`)} crédits`,
           price: moneyWorth,
         },
         {

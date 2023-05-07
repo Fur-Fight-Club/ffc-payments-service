@@ -4,7 +4,7 @@ import {
   StripeCheckoutSessionResponse,
   StripeService,
 } from "src/services/stripe.service";
-import { generateUUID } from "src/utils/functions.utils";
+import { addDotEveryThreeChars, generateUUID } from "src/utils/functions.utils";
 import { InvoicesService } from "src/services/invoices.service";
 import { PrismaService } from "src/services/prisma.service";
 import { StripePaymentStatus } from "ffc-prisma-package/dist/client";
@@ -36,7 +36,7 @@ export class CreditsService {
     const invoiceBuffer = await this.invoices.generatePDFInvoice(
       [
         {
-          name: `Achat de ${credits} crédits`,
+          name: `Achat de ${addDotEveryThreeChars(`${amount}`)} crédits`,
           price: Number((amount / 100).toFixed(2)),
         },
       ],
@@ -91,8 +91,10 @@ export class CreditsService {
     }
     const session = await this.stripeService.createCheckoutSession(
       amount,
-      `${credits} credits`,
-      `Acheter ${credits} credits pour ${amount / 100}€`,
+      `${addDotEveryThreeChars(`${amount}`)} credits`,
+      `Acheter ${addDotEveryThreeChars(`${amount}`)} credits pour ${
+        amount / 100
+      }€`,
       stripeAccount.customer_id,
       `${process.env.FRONTEND_URL}/payments/success/${session_uuid}`,
       `${process.env.FRONTEND_URL}/payments/error/${session_uuid}`
