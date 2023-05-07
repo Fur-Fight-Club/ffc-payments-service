@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { BuyCreditReturn, CreditsToMoney } from "./credits.schema";
 import {
   StripeCheckoutSessionResponse,
@@ -78,10 +78,22 @@ export class CreditsService {
     });
 
     // Create checkout session
+    const stripeAccount = await this.prisma.stripeAccount.findFirst({
+      where: {
+        fk_user: userObject.id,
+      },
+    });
+
+    if (!stripeAccount) {
+      throw new NotFoundException(
+        "Stripe account not found, please add first a bank account"
+      );
+    }
     const session = await this.stripeService.createCheckoutSession(
       amount,
       `${credits} credits`,
       `Acheter ${credits} credits pour ${amount / 100}€`,
+      stripeAccount.customer_id,
       `${process.env.FRONTEND_URL}/payments/success/${session_uuid}`,
       `${process.env.FRONTEND_URL}/payments/error/${session_uuid}`
     );
