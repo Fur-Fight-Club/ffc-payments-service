@@ -4,16 +4,17 @@ import {
   StripeCheckoutSessionResponse,
   StripeService,
 } from "src/services/stripe.service";
-import { CreditRepository } from "./credits.repository";
 import { generateUUID } from "src/utils/functions.utils";
 import { InvoicesService } from "src/services/invoices.service";
+import { PrismaService } from "src/services/prisma.service";
+import { StripePaymentStatus } from "ffc-prisma-package/dist/client";
 
 @Injectable()
 export class CreditsService {
   constructor(
     private readonly stripeService: StripeService,
-    private readonly creditRepository: CreditRepository,
-    private readonly invoices: InvoicesService
+    private readonly invoices: InvoicesService,
+    private readonly prisma: PrismaService
   ) {}
 
   async buyCredits(
@@ -22,7 +23,11 @@ export class CreditsService {
     session_uuid: string = generateUUID()
   ): Promise<BuyCreditReturn> {
     // Get user
-    const userObject = await this.creditRepository.getUserById(user);
+    const userObject = await this.prisma.user.findUnique({
+      where: {
+        id: user,
+      },
+    });
 
     // Parse credits to money
     const amount = CreditsToMoney[credits] * 100;
@@ -46,19 +51,31 @@ export class CreditsService {
     );
 
     // Create invoice in database
-    const invoice = await this.creditRepository.createInvoice(
-      amount,
-      userObject,
-      uploadedInvoice.url,
-      session_uuid
-    );
+    const invoice = await this.prisma.invoice.create({
+      data: {
+        amount,
+        fk_user: userObject.id,
+        url: uploadedInvoice.url,
+        uuid: session_uuid,
+      },
+    });
 
     // Create transaction in database
-    const transaction = await this.creditRepository.createCreditTransaction(
-      amount,
-      userObject,
-      invoice
-    );
+    const userWallet = await this.prisma.wallet.findFirst({
+      where: {
+        fk_user: userObject.id,
+      },
+    });
+
+    const transaction = await this.prisma.transaction.create({
+      data: {
+        type: "IN",
+        tag: "BUY_CREDIT",
+        amount,
+        walletId: userWallet.id,
+        invoiceId: invoice.id,
+      },
+    });
 
     // Create checkout session
     const session = await this.stripeService.createCheckoutSession(
@@ -67,10 +84,14 @@ export class CreditsService {
       `Acheter ${credits} credits pour ${amount / 100}€`
     );
 
-    const stripePayment = await this.creditRepository.createStripePayment(
-      transaction,
-      session
-    );
+    const stripePayment = await this.prisma.stripePayments.create({
+      data: {
+        fk_transaction: transaction.id,
+        session_id: session.id,
+        session: JSON.stringify(session),
+        status: StripePaymentStatus.PENDING,
+      },
+    });
 
     return {
       invoice,
