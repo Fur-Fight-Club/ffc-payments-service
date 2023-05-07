@@ -42,7 +42,7 @@ export class InvoicesService {
       content: [
         { text: "Facture", style: "header" },
         { text: "Détails de la facture", style: "subheader" },
-        { text: `ID de la facture : ${invoice_uuid}`, margin: [0, 10, 0, 0] },
+        { text: `ID de la facture : ${invoice_uuid}`, margin: [0, 10, 0, 20] },
         {
           text: `Date : ${new Date().toLocaleDateString("FR-fr")}`,
           margin: [0, 10, 0, 0],
@@ -52,14 +52,14 @@ export class InvoicesService {
           margin: [0, 10, 0, 0],
         },
         { text: `Email : ${user.email}`, margin: [0, 10, 0, 0] },
+        { text: "", margin: [0, 10, 0, 0] },
+        { text: "", margin: [0, 10, 0, 0] },
         { text: "Détails des produits", style: "subheader" },
-        { text: "Nom du produit : Mon produit", margin: [0, 10, 0, 0] },
-        { text: "Prix : 10 €", margin: [0, 10, 0, 0] },
         products.map((product) => ({
-          text: `${product.name} : ${product.price}€`,
+          text: `- ${product.name} : ${product.price}€`,
           margin: [0, 10, 0, 0],
         })),
-        { text: `Total : ${totalProductsPrice}`, margin: [0, 10, 0, 0] },
+        { text: `Total : ${totalProductsPrice}€`, margin: [0, 50, 0, 0] },
       ],
     };
 
