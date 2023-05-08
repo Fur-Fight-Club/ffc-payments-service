@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { PaymentsService } from "./payments.service";
-import { ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
 import { StripeCallbackValidationPipe } from "src/pipes/stripe-callback.pipe";
 import { UUIDValidationPipe } from "src/pipes/uuid.pipe";
 import { StripeCallback } from "./payments.schema";
@@ -8,11 +8,12 @@ import { ServiceGuard } from "src/auth/auth-service.guard";
 
 @Controller("payments")
 @ApiTags("Payments controller")
+@ApiBearerAuth()
+@UseGuards(ServiceGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Get(":callback/:session_id")
-  @UseGuards(ServiceGuard)
   @ApiParam({
     name: "callback",
     description: "Callback type",

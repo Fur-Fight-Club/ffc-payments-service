@@ -6,13 +6,17 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { BankAccountService } from "./bank-account.service";
-import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
 import { CreateBankAccountDto } from "./bank-account.schema";
+import { ServiceGuard } from "src/auth/auth-service.guard";
 
 @Controller("bank-account")
 @ApiTags("Bank Account Controller")
+@ApiBearerAuth()
+@UseGuards(ServiceGuard)
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
