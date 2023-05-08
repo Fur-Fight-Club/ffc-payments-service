@@ -18,12 +18,14 @@ export class InvoicesService {
    * @param products Products to add to the invoice
    * @param user Prisma user object of the user
    * @param invoice_uuid UUID of the invoice
+   * @param showTotalPrice Show the total price of the invoice on the PDF file
    * @returns Returns a buffer of the PDF invoice
    */
   async generatePDFInvoice(
     products: { name: string; price: number }[],
     user: User,
-    invoice_uuid: string
+    invoice_uuid: string,
+    showTotalPrice: boolean = true
   ): Promise<Buffer> {
     const totalProductsPrice = products.reduce((acc, product) => {
       return acc + product.price;
@@ -59,7 +61,9 @@ export class InvoicesService {
           text: `- ${product.name} : ${product.price}€`,
           margin: [0, 10, 0, 0],
         })),
-        { text: `Total : ${totalProductsPrice}€`, margin: [0, 50, 0, 0] },
+        showTotalPrice
+          ? { text: `Total : ${totalProductsPrice}€`, margin: [0, 50, 0, 0] }
+          : null,
       ],
     };
 
