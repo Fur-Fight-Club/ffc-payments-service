@@ -14,6 +14,71 @@ export class WalletService {
     private readonly prisma: PrismaService,
     private readonly invoices: InvoicesService
   ) {}
+
+  async getBalance(userId: number) {
+    const wallet = await this.prisma.wallet.findFirst({
+      where: {
+        fk_user: userId,
+      },
+    });
+
+    if (!wallet) {
+      throw new NotFoundException("Wallet not found");
+    }
+
+    return {
+      credits: wallet.amount,
+      euro: +(wallet.amount * exchangeRate).toFixed(2),
+    };
+  }
+
+  async updateUsersWalletBalance(userId: number, amount: number) {
+    const wallet = await this.prisma.wallet.findFirst({
+      where: {
+        fk_user: userId,
+      },
+    });
+
+    if (!wallet) {
+      throw new NotFoundException("Wallet not found");
+    }
+
+    const updatedWallet = await this.prisma.wallet.update({
+      where: {
+        id: wallet.id,
+      },
+      data: {
+        amount,
+      },
+    });
+
+    return {
+      credits: updatedWallet.amount,
+      euro: +(updatedWallet.amount * exchangeRate).toFixed(2),
+    };
+  }
+
+  async getAllWallets() {
+    const wallets = await this.prisma.wallet.findMany({
+      include: {
+        User: {
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return wallets.map((wallet) => ({
+      credits: wallet.amount,
+      euro: +(wallet.amount * exchangeRate).toFixed(2),
+      user: wallet.User,
+    }));
+  }
+
   async transferMoney(
     userId: number,
     amount: number,
