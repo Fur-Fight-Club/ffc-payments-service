@@ -22,12 +22,38 @@ export class UserService {
       where: {
         walletId: wallet.id,
       },
+      include: {
+        StripePayments: true,
+      },
     });
 
-    return {
-      wallet: wallet,
-      invoices: invoices,
-      transaction: transaction,
-    };
+    const stripeAccount = await this.prisma.stripeAccount.findMany({
+      where: {
+        fk_user: userId,
+      },
+      include: {
+        StripeBankAccount: true,
+      },
+    });
+
+    console.log(stripeAccount.length > 0);
+
+    if (stripeAccount.length > 0) {
+      const { StripeBankAccount, ...stripeAccountSpread } = stripeAccount[0];
+      return {
+        wallet: { ...wallet },
+        invoices: invoices,
+        transaction: transaction,
+        stripeAccount: stripeAccountSpread,
+        stripeBankAccount: StripeBankAccount,
+      };
+    } else {
+      return {
+        wallet: { ...wallet },
+        invoices: invoices,
+        transaction: transaction,
+        stripeAccount: stripeAccount,
+      };
+    }
   }
 }
