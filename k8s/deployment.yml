@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ffc-payments-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ffc-payments
+  template:
+    metadata:
+      labels:
+        app: ffc-payments
+    spec:
+      containers:
+        - name: ffc-payments
+          image: mcamus9/ffc-payments-docker
+          ports:
+            - containerPort: 4003
