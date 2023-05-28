@@ -46,6 +46,7 @@ const creditEnumSchema = z.enum([
 export const CreditsDto = z.object({
   credits: creditEnumSchema,
   user: z.number().int(),
+  requestFrom: z.enum(["ios", "android", "web"]),
 });
 
 export class BuyCreditDto extends createZodDto(CreditsDto) {
@@ -54,6 +55,9 @@ export class BuyCreditDto extends createZodDto(CreditsDto) {
 
   @ApiProperty()
   user: number;
+
+  @ApiProperty()
+  requestFrom: "ios" | "android" | "web";
 }
 
 export interface BuyCreditReturn {

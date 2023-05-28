@@ -4,6 +4,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 import { BuyCreditDto } from "./credits.schema";
 import { ZodValidationPipe } from "nestjs-zod";
 import { ServiceGuard } from "src/auth/auth-service.guard";
+import { generateUUID } from "src/utils/functions.utils";
 
 @Controller("credits")
 @ApiTags("Credits controller")
@@ -17,6 +18,11 @@ export class CreditsController {
     type: BuyCreditDto,
   })
   async buyCredits(@Body(ZodValidationPipe) body: BuyCreditDto) {
-    return this.creditsService.buyCredits(body.credits, body.user);
+    return this.creditsService.buyCredits(
+      body.credits,
+      body.user,
+      generateUUID(),
+      body.requestFrom
+    );
   }
 }

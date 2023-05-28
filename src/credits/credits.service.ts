@@ -20,7 +20,8 @@ export class CreditsService {
   async buyCredits(
     credits: string,
     user: number,
-    session_uuid: string = generateUUID()
+    session_uuid: string = generateUUID(),
+    requestFrom: "ios" | "android" | "web"
   ): Promise<BuyCreditReturn> {
     // Get user
     const userObject = await this.prisma.user.findUnique({
@@ -96,8 +97,8 @@ export class CreditsService {
         amount / 100
       }€`,
       stripeAccount.customer_id,
-      `${process.env.FRONTEND_URL}/payments/success/${session_uuid}`,
-      `${process.env.FRONTEND_URL}/payments/error/${session_uuid}`
+      `${process.env.FRONTEND_URL}/payments/success/${session_uuid}?requestFrom=${requestFrom}`,
+      `${process.env.FRONTEND_URL}/payments/error/${session_uuid}?requestFrom=${requestFrom}`
     );
 
     await this.prisma.stripePayments.create({
