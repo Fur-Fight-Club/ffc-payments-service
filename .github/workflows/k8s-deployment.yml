@@ -64,3 +64,4 @@ jobs:
       run: |
         gcloud container clusters get-credentials fury-fight-club --region europe-west1 --project fury-fight-club-386613
         kubectl set image deployment/ffc-payments-deployment ffc-payments=mcamus9/ffc-payments-docker:latest
+        kubectl rollout restart deployment/ffc-payments-deployment
