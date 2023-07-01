@@ -36,8 +36,6 @@ export class UserService {
       },
     });
 
-    console.log(stripeAccount.length > 0);
-
     if (stripeAccount.length > 0) {
       const { StripeBankAccount, ...stripeAccountSpread } = stripeAccount[0];
       return {

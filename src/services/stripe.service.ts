@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { String } from "aws-sdk/clients/cloudwatchevents";
 import Stripe from "stripe";
 
 @Injectable()
@@ -16,8 +15,8 @@ export class StripeService {
     productName: string,
     productDescription: string,
     customer: string,
-    successUrl: string = `${process.env.FRONTEND_URL}/payments/success`,
-    cancelUrl: string = `${process.env.FRONTEND_URL}/payments/error`
+    successUrl = `${process.env.FRONTEND_URL}/payments/success`,
+    cancelUrl = `${process.env.FRONTEND_URL}/payments/error`
   ) {
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ["card", "sepa_debit"],
@@ -59,11 +58,9 @@ export class StripeService {
   async addBankAccountToCustomer(
     customer_id: string,
     fullname: string,
-    email: String,
+    email: string,
     iban: string
   ): Promise<Stripe.Response<Stripe.PaymentMethod>> {
-    console.log({ customer_id, iban, fullname, email });
-
     const bankAccountPM = await this.stripe.paymentMethods.create({
       type: "sepa_debit",
       sepa_debit: {

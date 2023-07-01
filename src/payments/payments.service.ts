@@ -63,6 +63,10 @@ export class PaymentsService {
     return { status: StripePaymentStatus.SUCCEEDED, session_id };
   }
 
+  async getAllPayments() {
+    return this.prisma.stripePayments.findMany();
+  }
+
   async stripeErrorCallback(session_id: string) {
     // Basic payements checks operations
     const checks = await this.basicPaymentsChecks(session_id);
