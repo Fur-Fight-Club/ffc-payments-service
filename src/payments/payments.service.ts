@@ -63,6 +63,23 @@ export class PaymentsService {
     return { status: StripePaymentStatus.SUCCEEDED, session_id };
   }
 
+  async getAllPayments() {
+    return await this.prisma.transaction.findMany({
+      include: {
+        Wallet: {
+          include: {
+            User: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async stripeErrorCallback(session_id: string) {
     // Basic payements checks operations
     const checks = await this.basicPaymentsChecks(session_id);
