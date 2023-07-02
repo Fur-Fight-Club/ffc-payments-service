@@ -64,7 +64,7 @@ export class PaymentsService {
   }
 
   async getAllPayments() {
-    return this.prisma.stripePayments.findMany();
+    return await this.prisma.transaction.findMany();
   }
 
   async stripeErrorCallback(session_id: string) {
