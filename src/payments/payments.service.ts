@@ -64,7 +64,20 @@ export class PaymentsService {
   }
 
   async getAllPayments() {
-    return await this.prisma.transaction.findMany();
+    return await this.prisma.transaction.findMany({
+      include: {
+        Wallet: {
+          include: {
+            User: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async stripeErrorCallback(session_id: string) {
