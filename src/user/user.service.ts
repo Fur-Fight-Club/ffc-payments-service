@@ -24,6 +24,7 @@ export class UserService {
       },
       include: {
         StripePayments: true,
+        Invoice: true,
       },
     });
 
