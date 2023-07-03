@@ -76,6 +76,11 @@ export class PaymentsService {
             },
           },
         },
+        Invoice: {
+          select: {
+            url: true,
+          },
+        },
       },
     });
   }
