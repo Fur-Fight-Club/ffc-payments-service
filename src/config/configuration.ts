@@ -15,4 +15,5 @@ export default () => ({
   ffc_notifications_url:
     process.env.FFC_NOTIFICATIONS_URL ?? "http://10.102.1.45:4003",
   ffc_payments_url: process.env.FFC_PAYMENTS_URL ?? "http://10.102.3.226:4004",
+  ffc_frontend_url: process.env.FFC_FRONTEND_URL ?? "http://34.140.90.116",
 });
