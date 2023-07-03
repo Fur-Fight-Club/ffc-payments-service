@@ -8,13 +8,15 @@ import { addDotEveryThreeChars, generateUUID } from "src/utils/functions.utils";
 import { InvoicesService } from "src/services/invoices.service";
 import { PrismaService } from "src/services/prisma.service";
 import { StripePaymentStatus } from "ffc-prisma-package/dist/client";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class CreditsService {
   constructor(
     private readonly stripeService: StripeService,
     private readonly invoices: InvoicesService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService
   ) {}
 
   async buyCredits(
@@ -97,8 +99,12 @@ export class CreditsService {
         amount / 100
       }€`,
       stripeAccount.customer_id,
-      `${process.env.FRONTEND_URL}/payments/success/${session_uuid}?requestFrom=${requestFrom}`,
-      `${process.env.FRONTEND_URL}/payments/error/${session_uuid}?requestFrom=${requestFrom}`
+      `${this.config.get<string>(
+        "service"
+      )}/payments/success/${session_uuid}?requestFrom=${requestFrom}`,
+      `${this.config.get<string>(
+        "service"
+      )}/payments/error/${session_uuid}?requestFrom=${requestFrom}`
     );
 
     await this.prisma.stripePayments.create({
