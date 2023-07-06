@@ -100,10 +100,10 @@ export class CreditsService {
       }€`,
       stripeAccount.customer_id,
       `${this.config.get<string>(
-        "service"
+        "ffc_frontend_url"
       )}/payments/success/${session_uuid}?requestFrom=${requestFrom}`,
       `${this.config.get<string>(
-        "service"
+        "ffc_frontend_url"
       )}/payments/error/${session_uuid}?requestFrom=${requestFrom}`
     );
 
