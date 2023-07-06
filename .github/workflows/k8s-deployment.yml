@@ -26,6 +26,9 @@ jobs:
       run: |
         echo "${{ secrets.PK_SERVICE }}" > ./ssl/service-auth-public.pem
         echo "${{ secrets.SK_SERVICE }}" > ./ssl/service-auth-private.pem
+
+    - name: 📦 Install dependencies
+      run: npm install
     
     - name: 🧪 Execute tests
       run: npm run test
