@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "*"  # ou la branche de votre choix
+
+jobs:
+  checkout-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout project
+      uses: actions/checkout@v2
+
+    - name: 🔨 Build .env from GitHub secrets
+      run: |
+        echo "DATABASE_URL='${{ secrets.DATABASE_URL }}'" >> .env
+        echo "STRIPE_SECRET_KEY='${{ secrets.STRIPE_SECRET_KEY }}'" >> .env
+        echo "AWS_BUCKET_NAME='${{ secrets.AWS_BUCKET_NAME }}'" >> .env
+        echo "AWS_ACCESS_KEY_ID='${{ secrets.AWS_ACCESS_KEY_ID }}'" >> .env
+        echo "AWS_SECRET_ACCESS_KEY='${{ secrets.AWS_SECRET_ACCESS_KEY }}'" >> .env
+        echo "AWS_REGION='${{ secrets.AWS_REGION }}'" >> .env
+
+    - name: 📦 Install dependencies
+      run: npm install
+
+    - name: 🧪 Execute tests
+      run: npm run test
